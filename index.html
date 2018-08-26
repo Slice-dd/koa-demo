@@ -11,6 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
         .upload {
             width: 100px;
             margin: 100px;
@@ -25,6 +26,7 @@
             cursor: pointer;
             transition: all .3s;
         }
+
         span:hover {
             opacity: .85;
         }
@@ -41,18 +43,21 @@
     </label>
     <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
     <script>
+        // get element
         var files = document.querySelector('#file'); 
+
+        // bind event
         files.addEventListener('change', function(e) {
             debugger
             var fileList = e.target.files[0];
 
-            var fm = new FormData();
-
+            var fm = new FormData(); 
+            
             // fm.enctype="multipart/form-data";
-
+            
             fm.append(fileList.name, fileList);
 
-            fm.append('id', 'testId');
+            fm.append('id', 'testId'); // add test data
             
             axios({
                 method: 'post',
@@ -60,6 +65,7 @@
                 data: fm
             }).then(res => {
                 debugger
+                // {status: 1}
             })
 
         });
