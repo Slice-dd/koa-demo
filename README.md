@@ -1,3 +1,3 @@
-# usage
-    * npm install
-    * npm run start
+## usage
+- npm install
+- npm run start
