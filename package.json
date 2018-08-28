@@ -14,8 +14,14 @@
     "electron": "^2.0.8",
     "koa": "^2.5.2",
     "koa-body": "^4.0.4",
+    "koa-logger": "^3.2.0",
+    "koa-mysql-session": "0.0.2",
     "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0"
+    "koa-session-minimal": "^3.0.4",
+    "koa-static": "^5.0.0",
+    "koa-static-cache": "^5.1.2",
+    "moment": "^2.22.2",
+    "mysql": "^2.16.0"
   },
   "devDependencies": {
     "webpack": "^4.17.1",

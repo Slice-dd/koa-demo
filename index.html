@@ -55,7 +55,7 @@
             
             // fm.enctype="multipart/form-data";
             
-            fm.append(fileList.name, fileList);
+            fm.append('file', fileList);
 
             fm.append('id', 'testId'); // add test data
             
@@ -66,6 +66,12 @@
             }).then(res => {
                 debugger
                 // {status: 1}
+                var result = res.data;
+                if(result.status == 1) {
+                    alert(result.message)
+                }else {
+                    alert(result.message.message)
+                }
             })
 
         });
