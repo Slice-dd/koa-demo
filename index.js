@@ -19,7 +19,7 @@ const asyncs = require('./until/async');
 const app = new Koa(); // koa app
 const router = new Router(); // router
 
-app.use(server('.')); // static files and default redicft index.html
+app.use(server(__dirname, 'iframeFile.html')); // static files and default redicft index.html
 
 // sessionconfig
 const sessionMysqlConfig = {
@@ -65,7 +65,7 @@ router.post('/upload', koaBody({
     const data = ctx.request.body; // the request body
     const files = ctx.request.files; // the request files
     // const reader = fs.createReadStream(files.path)
-
+    
     try {
         // bolb data
         const fileResult = await asyncs.readFiles(files.file.path); 

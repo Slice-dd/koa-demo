@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         .upload {
             width: 100px;
             margin: 100px;
@@ -36,29 +37,33 @@
         }
     </style>
 </head>
+
 <body>
-    <label class="upload">
-        <span>上传文件</span>
-        <input id="file" type="file">
-    </label>
+    <form enctype="multipart/form-data">
+        <label class="upload">
+            <span>上传文件</span>
+            <input id="file" type="file">
+        </label>
+    </form>
+
     <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
     <script>
         // get element
-        var files = document.querySelector('#file'); 
+        var files = document.querySelector('#file');
 
         // bind event
-        files.addEventListener('change', function(e) {
+        files.addEventListener('change', function (e) {
             debugger
             var fileList = e.target.files[0];
 
-            var fm = new FormData(); 
-            
+            var fm = new FormData();
+
             // fm.enctype="multipart/form-data";
-            
+
             fm.append('file', fileList);
 
             fm.append('id', 'testId'); // add test data
-            
+
             axios({
                 method: 'post',
                 url: '/upload',
@@ -67,9 +72,9 @@
                 debugger
                 // {status: 1}
                 var result = res.data;
-                if(result.status == 1) {
+                if (result.status == 1) {
                     alert(result.message)
-                }else {
+                } else {
                     alert(result.message.message)
                 }
             })
@@ -77,4 +82,5 @@
         });
     </script>
 </body>
+
 </html>
