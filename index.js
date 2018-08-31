@@ -17,9 +17,11 @@ const model = require('./mysql'); // mysql sql
 const asyncs = require('./until/async'); 
 
 const app = new Koa(); // koa app
-const router = new Router(); // router
+const router = new Router(); // koa-router
 
-app.use(server(__dirname, 'iframeFile.html')); // static files and default redicft index.html
+app.use(server('.')); // static -> index.html
+
+app.use(server(__dirname, 'iframeFile.html')); // static files iframeFile.html
 
 // sessionconfig
 const sessionMysqlConfig = {
@@ -72,12 +74,16 @@ router.post('/upload', koaBody({
         // insert bolb data into mysql
         const insetMysql = await model.insertFiles(fileResult); 
 
-        ctx.body = {
+        // ie9
+        ctx.response.type = 'text/html'
+        
+        ctx.response.body = JSON.stringify({
             status: 1,
             message: '上传文件成功'
-        };
+        });
     } catch(e) {
-        ctx.body = {
+        ctx.response.status = e.statusCode || err.status || 500;
+        ctx.response.body = {
             status: 0,
             message: e
         };

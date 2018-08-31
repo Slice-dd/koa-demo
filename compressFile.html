@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .upload {
+            width: 100px;
+            margin: 100px;
+            display: block;
+        }
+
+        span {
+            padding: 6px 16px;
+            color: #fff;
+            background-color: rgb(22, 112, 231);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        span:hover {
+            opacity: .85;
+        }
+
+        input[type='file'] {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <form enctype="multipart/form-data">
+        <label class="upload">
+            <span>上传文件</span>
+            <input id="file" type="file" name="files" accept="image/*">
+        </label>
+    </form>
+
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+    <script>
+       
+    </script>
+</body>
+
+</html>
