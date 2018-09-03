@@ -42,13 +42,64 @@
     <form enctype="multipart/form-data">
         <label class="upload">
             <span>上传文件</span>
-            <input id="file" type="file" name="files" accept="image/*">
+            <input id="file" type="file" name="files" accept="image/*" multiple>
         </label>
     </form>
 
     <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
     <script>
-       
+        var files = document.querySelector('#file');
+        
+        files.addEventListener('change', function (e) {
+
+            var fileList = e.target.files;
+
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                toDataUrl(e.target.result, function (dataurl) {
+
+                    var blob = dataUrlToBlob(dataurl);
+                    
+                    axios({
+                        url: '/uploadWithFile',
+                        method: 'post',
+                        headers: {
+                            'content-type': 'application/octet-stream'
+                        },
+                        data: blob
+                    }).then(res => {
+                        debugger
+                    })
+
+                });
+            };
+
+            reader.readAsDataURL(fileList[0]);
+
+        });
+
+        function toDataUrl(result, callback) {
+            var img = new Image();
+            img.src = result;
+            img.onload = function () {
+                var canvas = document.createElement('canvas');
+                var c = canvas.getContext('2d');
+                c.drawImage(img, 0, 0, img.width, img.height);
+                callback(canvas.toDataURL('image/jpeg', 0.5));
+            }
+
+        }
+
+        function dataUrlToBlob(dataurl) {
+            debugger
+            var arr = dataurl.split(','), type = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: type })
+        }
     </script>
 </body>
 

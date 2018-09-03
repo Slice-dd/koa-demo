@@ -88,35 +88,31 @@ router.post('/upload', koaBody({
             message: e
         };
     }
-    // read file and insert into mysql
-    // fs.readFile(files.file.path, function(err, data) {
-    //     if(err) {
-    //         ctx.body = {
-    //             status: 0,
-    //             message: '上传文件失败'
-    //         };
-    //     }else {
-    //         model.insertFiles(data).then(res => {
-    //             // debugger
-    //             ctx.body = {
-    //                 status: 1,
-    //                 message: '上传文件成功'
-    //             };
-    //         }).catch(err => {
-    //             // debugger
-    //             ctx.body = {
-    //                 status: 0,
-    //                 message: '上传文件失败'
-    //             };
-    //         })
-    //     }
-       
-    // })
-   
-    // response return to client
- 
-
 });
+
+router.post('/uploadWithFile', koaBody({
+    // multipart: true,
+    urlencoded: false,
+    formidable: {
+        maxFileSize: 16*1024*1024    // set max size 20M
+    }
+}), async (ctx, next) => {
+
+    const file = ctx.request.body;
+    
+    try{
+        const insetMysql = await model.insertFiles(file); 
+        ctx.response.body = {
+            status: 1,
+            message: '上传文件成功'
+        }
+    }catch(e) {
+        ctx.response.body = {
+            status: 0,
+            message: e.message
+        }
+    }
+})
 
 app.use(router.routes()).use(router.allowedMethods());
 
