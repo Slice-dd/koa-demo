@@ -6,6 +6,8 @@ const MysqlStore = require('koa-mysql-session');
 const session = require('koa-session-minimal');
 const staticCache = require('koa-static-cache');
 const KoaLoger = require('koa-logger');
+const body = require('koa-better-body');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -14,7 +16,7 @@ const config = require('./config');
 
 const model = require('./mysql'); // mysql sql
 
-const asyncs = require('./until/async'); 
+const asyncs = require('./until/async');
 
 const app = new Koa(); // koa app
 const router = new Router(); // koa-router
@@ -57,31 +59,31 @@ app.use(staticCache(path.join(__dirname, './public'), { dynamic: true }, {
 
 
 // post request and use koabody to resolve request body
-router.post('/upload', koaBody({ 
+router.post('/upload', koaBody({
     multipart: true,
     formidable: {
-        maxFileSize: 16*1024*1024    // set max size 20M
+        maxFileSize: 16 * 1024 * 1024    // set max size 20M
     }
 }), async (ctx, next) => {
 
     const data = ctx.request.body; // the request body
     const files = ctx.request.files; // the request files
     // const reader = fs.createReadStream(files.path)
-    
+
     try {
         // bolb data
-        const fileResult = await asyncs.readFiles(files.file.path); 
+        const fileResult = await asyncs.readFiles(files.file.path);
         // insert bolb data into mysql
-        const insetMysql = await model.insertFiles(fileResult); 
+        const insetMysql = await model.insertFiles(fileResult);
 
         // ie9
         ctx.response.type = 'text/html'
-        
+
         ctx.response.body = JSON.stringify({
             status: 1,
             message: '上传文件成功'
         });
-    } catch(e) {
+    } catch (e) {
         ctx.response.status = e.statusCode || err.status || 500;
         ctx.response.body = {
             status: 0,
@@ -90,29 +92,30 @@ router.post('/upload', koaBody({
     }
 });
 
-router.post('/uploadWithFile', koaBody({
-    // multipart: true,
-    urlencoded: false,
-    formidable: {
-        maxFileSize: 16*1024*1024    // set max size 20M
-    }
-}), async (ctx, next) => {
+// use raw-body to get buffer data
+router.post('/uploadWithFile', async (ctx, next) => {
 
-    const file = ctx.request.body;
-    
     try{
-        const insetMysql = await model.insertFiles(file); 
-        ctx.response.body = {
+        // use raw-body to get buffer data
+        const bufferData = await asyncs.readBufferData(ctx.req, {
+            length: ctx.req.headers['content-length'],
+            limit: '10mb'
+        });
+        
+        const insetMysql = await model.insertFiles(bufferData);
+
+        ctx.response.body = JSON.stringify({
             status: 1,
             message: '上传文件成功'
-        }
-    }catch(e) {
+        });
+
+    } catch(e) {
         ctx.response.body = {
             status: 0,
             message: e.message
         }
     }
-})
+});
 
 app.use(router.routes()).use(router.allowedMethods());
 
